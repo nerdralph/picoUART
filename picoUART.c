@@ -13,7 +13,7 @@
  * 20200123 version 0.5
  * 20200123 version 0.6 - improve inline asm
  * 20200201 version 0.7 - use push/pull during tx 
- * 20200203 version 0.8 - add prints_P, prefix globals with PU_
+ * 20200203 version 0.8 - add prints, prefix globals with PU_
  * 20200209 version 0.9 - rewrite in mostly C 
  */
 
@@ -21,7 +21,7 @@
 #include <avr/interrupt.h>
 
 #include "pu_config.h"                  // baud rate & gpio config
-#include "picoUART.h"
+// #include "picoUART.h"
 
 // use static inline functions for type safety
 extern inline float PUBIT_CYCLES() {return F_CPU/(PU_BAUD_RATE*1.0);}
@@ -41,12 +41,6 @@ extern inline float PUSKEW() {
 // +-1.5 cycles.  Add 0.5 cycles for int rounding, and add skew.
 extern inline int PURXSTART() {
     return (PUBIT_CYCLES()*1.5 -5.5 -PURXWAIT() + 0.5 + PUSKEW());
-}
-
-// min rx/tx turn-around time in resistor-only 1-wire mode
-inline void pu_rxtx_wait()
-{
-    __builtin_avr_delay_cycles(PUBIT_CYCLES()*1.5);
 }
 
 void pu_disable_irq() {
@@ -105,12 +99,12 @@ void putx(uint8_t c)
 
     // hi8 b1 set for stop bit, b2 set for line idle state
     f.hi8 = 0x03;
+    bits psave = {PUTXPORT};
 
-    // r0 == __tmp_reg__
-    register bits psave asm ("r0") = {PUTXPORT};
     //do {
     txbit:
         __builtin_avr_delay_cycles(PUTXWAIT());
+        // macro hack to set correct bit
         concat(psave.b, PUTXBIT) = f.lo8 & 0x01 ? 1 : 0;
         f.i16 >>= 1;
         PUTXPORT = psave.c; 
@@ -127,11 +121,13 @@ uint8_t purx()
     // except for at very high baud rates ( <= 11 cycles per bit )
     if ( PUBIT_CYCLES() + 0.5 > 11 )
         while (! (PURXPIN & (1<<PURXBIT)) ); 
+
     pu_disable_irq();
+
     // wait for start bit
     while ( PURXPIN & (1<<PURXBIT) ); 
-
     uint8_t c = 0x80;                   // bit shift counter
+    // wait for the middle of the start bit
     __builtin_avr_delay_cycles(PURXSTART());
 
     rxbit:
@@ -146,7 +142,6 @@ uint8_t purx()
     return c;
 }
 
-__attribute((noinline))
 void prints(const char* s)
 {
     char c;

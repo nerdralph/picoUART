@@ -9,5 +9,5 @@
 #define PU_RX B,1
 
 // disable interrupts during Tx and Rx
-//#define PU_DISABLE_IRQ 1
+#define PU_DISABLE_IRQ 1
 
