@@ -11,7 +11,6 @@ this is less than 1% at 8Mhz.
 Default Rx is on PB0, and Tx is on PB1.  If set to the same pin,
 picoUART is also capable of 1-wire (shared Rx/Tx) operation.
 
-picoUART is a header-only library that is compatible with the Arduino API
-but is not dependent on any Arduino functions so it can be used with
-avr-libc.
+picoUART is a library that is compatible with the Arduino API but is not
+ dependent on any Arduino functions so it can be used with avr-libc.
 
