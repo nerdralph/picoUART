@@ -5,8 +5,10 @@
 #endif
 
 // port and bit for Tx and Rx - can be same
+#ifndef PU_TX
 #define PU_TX B,0
 #define PU_RX B,1
+#endif
 
 // disable interrupts during Tx and Rx
 #define PU_DISABLE_IRQ 1
