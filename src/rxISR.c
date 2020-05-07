@@ -60,7 +60,8 @@ void purx_isr_init()
 uint8_t pu_read()
 {
     uint8_t data = purx_data;
+    // wait for line idle before re-enabling interrupt
     loop_until_bit_is_set(PURXPIN, PURXBIT);
-    PCMSK = 1<<PURXBIT;                 // re-enable ISR
+    PCMSK |= 1<<PURXBIT;                // re-enable ISR
     return data;
 }
