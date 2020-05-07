@@ -4,15 +4,16 @@
 
 void setup()
 {
-    prints("\npicoUART rxISR echo ");
+    prints("\npicoUART rxISR echo\n");
 }
 
 void loop()
 {
     if ( purx_dataready() )
     {
+        char c = pu_read();
         prints(" got: ");
-        putx(pu_read());
+        putx(c);
         putx('\n');
     }
 }
