@@ -20,28 +20,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "pu_config.h"                  // baud rate & gpio config
-// #include "picoUART.h"
-
-// use static inline functions for type safety
-extern inline float PUBIT_CYCLES() {return F_CPU/(PU_BAUD_RATE*1.0);}
-
-// delay based on cycle count of asm code + 0.5 for rounding
-extern inline int PUTXWAIT() {return PUBIT_CYCLES() - 7 + 0.5;}
-extern inline int PURXWAIT() {return PUBIT_CYCLES() - 5 + 0.5;}
-
-// correct for PURXWAIT skew in PURXSTART calculation
-// skew is half of 7 delay intervals between 8 bits
-extern inline float PUSKEW() {
-    return (PUBIT_CYCLES() - (int)(PUBIT_CYCLES() + 0.5)) * 3.5;
-}
-// Time from falling edge of start bit to sample 1st bit is 1.5 *
-// bit-time. Subtract 2c for sbic, 1 for ldi, 1 for lsr, and PURXWAIT.
-// Subtract 1.5 cycles because start bit detection is accurate to
-// +-1.5 cycles.  Add 0.5 cycles for int rounding, and add skew.
-extern inline int PURXSTART() {
-    return (PUBIT_CYCLES()*1.5 -5.5 -PURXWAIT() + 0.5 + PUSKEW());
-}
+#include "picoUART.h"
 
 void pu_disable_irq() {
 #ifdef PU_DISABLE_IRQ
@@ -54,22 +33,6 @@ void pu_enable_irq() {
     sei();
 #endif
 }
-
-// I/O register macros
-#define GBIT(r,b)       b
-#define GPORT(r,b)      (PORT ## r)
-#define GDDR(r,b)       (DDR ## r)
-#define GPIN(r,b)       (PIN ## r)
-#define get_bit(io)     GBIT(io)
-#define get_port(io)    GPORT(io)
-#define get_ddr(io)     GDDR(io)
-#define get_pin(io)     GPIN(io)
-
-#define PUTXBIT     get_bit(PU_TX)
-#define PUTXPORT    get_port(PU_TX)
-#define PUTXDDR     get_ddr(PU_TX)
-#define PURXBIT     get_bit(PU_RX)
-#define PURXPIN     get_pin(PU_RX)
 
 #define _concat(a, b) (a ## b)
 #define concat(a, b)  _concat(a, b)
@@ -145,6 +108,6 @@ uint8_t purx()
 void prints(const char* s)
 {
     char c;
-    while(c = *s++) putx(c);
+    while ((c = *s++)) putx(c);
 }
 
