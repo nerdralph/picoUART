@@ -42,13 +42,6 @@ uint8_t pu_read();
 // data is ready if PCINT is disabled
 MUST_INLINE int purx_dataready() { return !(PCMSK & 1<<PURXBIT); } 
 
-// move to rxISR.c .init ?
-MUST_INLINE void purx_isr_init()
-{
-    PCMSK = 1<<PURXBIT;
-    GIMSK = 1<<PCIE;
-}
-
 //helper functions
 void prints(const char* s);
 

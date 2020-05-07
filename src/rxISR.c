@@ -8,7 +8,6 @@ volatile uint8_t purx_data __attribute(( section(".noinit") ));
 
 // PCINT latency is 6 cycles minimum + 2 for rjmp 
 // nerdralph.blogspot.com/2020/04/measuring-avr-interrupt-latency.html  
-// __attribute (( used, section(".text.puISR" ) ))
 ISR(PCINT0_vect, ISR_NAKED)
 {
     register char c asm ("r16");
@@ -48,6 +47,15 @@ ISR(PCINT0_vect, ISR_NAKED)
     );
 }
 
+// setup receive interrupt - automatically called before main
+__attribute((naked, used, section (".init8")))
+void purx_isr_init()
+{
+    PCMSK |= 1<<PURXBIT;
+    GIMSK = 1<<PCIE;
+    asm("sei");
+}
+
 // read purx_data & re-enable ISR
 uint8_t pu_read()
 {
@@ -56,7 +64,3 @@ uint8_t pu_read()
     PCMSK = 1<<PURXBIT;                 // re-enable ISR
     return data;
 }
-
-// put purx_isr_init here
-// __attribute (( used, section(".init8" ) ))
-
