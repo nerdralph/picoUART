@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "pu_config.h"
 
 // make these functions work like type-safe macros
@@ -39,8 +40,8 @@ uint8_t purx();
 // read purx_data & re-enable ISR
 uint8_t pu_read();
 
-// data is ready if PCINT is disabled
-MUST_INLINE int purx_dataready() { return !(PCMSK & 1<<PURXBIT); } 
+// data is ready when PCINT is disabled
+MUST_INLINE bool purx_dataready() { return !(PCMSK & 1<<PURXBIT); } 
 
 //helper functions
 void prints(const char* s);
