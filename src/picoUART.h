@@ -11,8 +11,6 @@
 extern "C" {
 #endif
 
-// use static inline functions for type safety
-__attribute((always_inline))
 MUST_INLINE float PUBIT_CYCLES() {return F_CPU/(PU_BAUD_RATE*1.0);}
 
 // delay based on cycle count of asm code + 0.5 for rounding
