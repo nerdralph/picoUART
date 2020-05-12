@@ -1,6 +1,7 @@
 // echo example using interrupt-driven receive
 
 #include <picoUART.h>
+#include <pu_print.h>
 
 const int buflen = 20;
 char linebuf[buflen];
