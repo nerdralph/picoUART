@@ -5,8 +5,10 @@
 // output value is timing delta in cycles followed by OSCCAL value
 
 #include <avr/sleep.h>
+#include <avr/pgmspace.h>
 #include <util/delay.h>
 #include <picoUART.h>
+#include <pu_print.h>
 
 // add 0.5 for integer rounding
 // #define CYCLES_PER_BIT (uint8_t)(PUBIT_CYCLES() + 0.5)
@@ -38,16 +40,25 @@ ISR(PCINT0_vect)
     // end of interval, reset counter
     TCCR0B = 0;
     TCNT0 = 0;
+#ifdef DEBUG
+    printHex(current);
+    putx(' ');
+#endif
     // 'x' begins with 3 zeros + start bit = 4 * bit-time
     // match speed to soft uart bit time
     // use mod256 math to handle potential uint8_t overflow
     unsigned expected = (unsigned)(PUBIT_CYCLES * 4 + 0.5);
     char delta = (expected & 0xFF) - current;
-    if (delta > 4) OSCCAL++;
-    if (delta < -4) OSCCAL--;
-    printHex(delta);
-    putx(' ');
     printHex(OSCCAL);
+    if (delta > 3) {
+      OSCCAL++;
+      prints_P(PSTR(" slow"));
+    }
+    else if (delta < -3) {
+      OSCCAL--;
+      prints_P(PSTR(" fast"));
+    }
+    else prints_P(PSTR(" good"));
     putx('\n');
   }
   // clear interrupt flag in case another triggered
@@ -56,10 +67,11 @@ ISR(PCINT0_vect)
 
 void setup()
 {
+  _delay_ms(100);                       // serial monitor open delay
   PORTB |= 1<<PURXBIT;                  // pullup RX line
 
-  _delay_ms(1000);                      // pause after startup
-  prints("OSCCAL tuner hit x\n");
+  printHex(OSCCAL);
+  prints_P(PSTR(" Hit x to test.\n"));
 wait_x:
   // wait for tuning character to ensure not reading noise
   // before entering tuning mode
@@ -78,15 +90,15 @@ wait_x:
 
   _delay_ms(1);                         // skip remaining bits in frame
 
-  char tuning_msg = " tuning required.\n";
+#ifdef DEBUG
+  printHex(delta);
+#endif
+  prints_P(PSTR(" OSCCAL "));
   if (delta < 2) { 
-    prints("No");
-    prints(tuning_msg);
+    prints_P(PSTR("OK\n"));
     return;
   }
-  printHex(OSCCAL);
-  putx('\n');
-  prints(tuning_msg);
+  prints_P(PSTR("imperfect\n"));
   // reset counter for first interrupt
   TCCR0B = 0;
   TCNT0 = 0;
