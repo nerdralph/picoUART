@@ -24,7 +24,7 @@ const float PUSKEW = ( PUBIT_CYCLES - (int)(PUBIT_CYCLES + 0.5) ) * 3.5;
 // +-1.5 cycles.  Add 0.5 cycles for int rounding, and add skew.
 const int PURXSTART = PUBIT_CYCLES*1.5 -5.5 -PURXWAIT + 0.5 + PUSKEW;
 
-void putx(uint8_t c);
+extern "C" void putx(uint8_t c);
 uint8_t purx();
 
 // PCINT-based Rx functions
@@ -34,7 +34,4 @@ uint8_t pu_read();
 
 // data is ready when PCINT is disabled
 MUST_INLINE bool purx_dataready() { return !(PCMSK & 1<<PURXBIT); } 
-
-//helper functions
-void prints(const char* s);
 

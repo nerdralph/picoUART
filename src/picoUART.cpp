@@ -22,17 +22,24 @@
 
 #include "picoUART.h"
 
-void pu_disable_irq() {
+// saves SREG, disables interrupts
+struct IntModeSave
+{
+    IntModeSave() {
 #ifdef PU_DISABLE_IRQ
-    cli();
+        sreg_save = SREG;
+        cli();
 #endif
-}
+    }
+    ~IntModeSave() {
+#ifdef PU_DISABLE_IRQ
+        SREG = sreg_save;
+#endif
+    }
 
-void pu_enable_irq() {
-#ifdef PU_DISABLE_IRQ
-    sei();
-#endif
-}
+  private:
+    uint8_t sreg_save;
+};
 
 #define _concat(a, b) (a ## b)
 #define concat(a, b)  _concat(a, b)
@@ -50,14 +57,15 @@ typedef union {
 } bits;
 
 
-void putx(uint8_t c)
+extern "C" void putx(uint8_t c)
 {
     // pin frame to r25:24 since c will already be in r24 for ABI
     register frame f asm("r24");
     f.lo8 = c;
 
     PUTXPORT &= ~(1<<PUTXBIT);          // disable pullup
-    pu_disable_irq();
+    IntModeSave isave;
+
     PUTXDDR |= (1<<PUTXBIT);            // low for start bit
 
     // hi8 b1 set for stop bit, b2 set for line idle state
@@ -74,7 +82,6 @@ void putx(uint8_t c)
     // tx more bits if f.lo8 not equal to 0
     asm goto ("brne %l[txbit]" :::: txbit);
     //} while (f.lo8);
-    pu_enable_irq();
     PUTXDDR &= ~(1<<PUTXBIT);            // revert to input mode
 }
 
@@ -85,7 +92,7 @@ uint8_t purx()
     if ( PUBIT_CYCLES + 0.5 > 11 )
         while (! (PURXPIN & (1<<PURXBIT)) ); 
 
-    pu_disable_irq();
+    IntModeSave isave;
 
     // wait for start bit
     while ( PURXPIN & (1<<PURXBIT) ); 
@@ -101,12 +108,6 @@ uint8_t purx()
     // read bits until carry set
     asm goto ("brcc %l[rxbit]" :::: rxbit);
 
-    pu_enable_irq();
     return c;
-}
-
-void prints(const char* s)
-{
-    while (*s) putx(*s++);
 }
 
