@@ -83,10 +83,13 @@ wait_x:
   
   // low period should be 4 bit-times for 'x'
   // counter loop is 4 cycles, so counter =~ cycles/bit
-  // 1/8 = 12.5% timing margin
-  uint8_t margin = CYCLES_PER_BIT / 8;
+  // 1/4 = 25% timing margin
+  uint8_t margin = CYCLES_PER_BIT / 4;
   uint8_t delta = abs( counter - CYCLES_PER_BIT);
-  if (delta > margin) goto wait_x;
+  if (delta > margin) {
+    prints_P(PSTR("noise skipped\n"));
+    goto wait_x;
+  }
 
   _delay_ms(1);                         // skip remaining bits in frame
 
