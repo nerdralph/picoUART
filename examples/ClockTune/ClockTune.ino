@@ -85,17 +85,17 @@ wait_x:
   // counter loop is 4 cycles, so counter =~ cycles/bit
   // 1/4 = 25% timing margin
   uint8_t margin = CYCLES_PER_BIT / 4;
-  uint8_t delta = abs( counter - CYCLES_PER_BIT);
+  // use __builtin_abs() in case some fool made an abs() macro
+  uint8_t delta = __builtin_abs( counter - CYCLES_PER_BIT);
+#ifdef DEBUG
+  printHex(delta);
+#endif
   if (delta > margin) {
-    prints_P(PSTR("noise skipped\n"));
+    prints_P(PSTR(" noise skipped\n"));
     goto wait_x;
   }
 
   _delay_ms(1);                         // skip remaining bits in frame
-
-#ifdef DEBUG
-  printHex(delta);
-#endif
   prints_P(PSTR(" OSCCAL "));
   if (delta < 2) { 
     prints_P(PSTR("OK\n"));
