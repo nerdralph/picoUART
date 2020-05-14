@@ -27,7 +27,9 @@ const int PURXSTART = PUBIT_CYCLES*1.5 -5.5 -PURXWAIT + 0.5 + PUSKEW;
 extern "C" void putx(uint8_t c);
 uint8_t purx();
 
-// PCINT-based Rx functions
+// PCINT-based Rx functions limited to t13 and t85
+
+#ifdef PCMSK
 
 // read purx_data & re-enable ISR
 uint8_t pu_read();
@@ -35,3 +37,4 @@ uint8_t pu_read();
 // data is ready when PCINT is disabled
 MUST_INLINE bool purx_dataready() { return !(PCMSK & 1<<PURXBIT); } 
 
+#endif  // PCMSK

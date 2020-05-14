@@ -1,7 +1,12 @@
+// PCINT-triggered receive
+// Rx pin must be on PORTB, using PCINT0
+// devices like t84 with PCINT0 on a different port are not supported
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "picoUART.h"
 
+#ifdef PCMSK
 
 // RX ISR storage
 volatile uint8_t purx_data __attribute(( section(".noinit") ));
@@ -65,3 +70,6 @@ uint8_t pu_read()
     PCMSK |= 1<<PURXBIT;                // re-enable ISR
     return data;
 }
+
+#endif  // PCMSK
+
