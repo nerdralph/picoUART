@@ -13,7 +13,7 @@ picoUART is a library that is compatible with the Arduino API but is not
 
 Default Rx is on PB1, and Tx is on PB0.  If set to the same pin in pu_config.h, picoUART is also capable of 1-wire (shared Rx/Tx) operation.
 
-picoUART 1.0.0 supports interrupt-driven receive using pin-change interrupts.  Currently 1-wire shared Rx/Tx is not supported with PCINT-based receive. Full-duplex communication is not possible, so received characters will be lost if they arrive during transmit.  For the interrupt driven receive, use purx_dataready() and pu_read().  Due to ISR overhead, the maximum reliable speed is 115.2kbps at 8Mhz.  There is a single-character receive buffer, so data is likely to be lost if it is not read and processed quickly.  A 16-byte receive FIFO is a possibility for a later version.
+picoUART 1.0.0 supports interrupt-driven receive using pin-change interrupts on the t13 and t85 series.  Currently 1-wire shared Rx/Tx is not supported with PCINT-based receive. Full-duplex communication is not possible, so received characters will be lost if they arrive during transmit.  For the interrupt driven receive, use purx_dataready() and pu_read().  Due to ISR overhead, the maximum reliable speed is 115.2kbps at 8Mhz.  There is a single-character receive buffer, so data is likely to be lost if it is not read and processed quickly.  A 16-byte receive FIFO is a possibility for a later version.
 
 Examples include a clock tuner program to help determine the best OSCCAL value for error-free communication.
 
