@@ -7,8 +7,7 @@
 // make these functions work like type-safe macros
 #define MUST_INLINE __attribute((always_inline)) inline
 
-// MUST_INLINE float PUBIT_CYCLES() {return F_CPU/(PU_BAUD_RATE*1.0);}
-constexpr float PUBIT_CYCLES = F_CPU/(PU_BAUD_RATE*1.0);
+const float PUBIT_CYCLES = F_CPU/(PU_BAUD_RATE*1.0);
 
 // delay based on cycle count of asm code + 0.5 for rounding
 const int PUTXWAIT = PUBIT_CYCLES - 7 + 0.5;
