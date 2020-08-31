@@ -4,8 +4,6 @@
  * picoUART is accurate to the cycle (+- 0.5 cycle error)
  * 0.64% error at 115.2k/8M and 0.4% error at 115.2k/9.6M
  *
- * define PU_BAUD_RATE before #include to change default baud rate 
- *
  * capable of single-pin operation (PU_TX = PU_RX) as follows:
  * connect MCU pin to host RX line, and a 1.5k-4.7k resistor between
  * host RX and TX line.  Note this also gives local echo.
@@ -68,7 +66,7 @@ extern "C" void putx(uint8_t c)
 
     PUTXDDR |= (1<<PUTXBIT);            // low for start bit
 
-    // hi8 b1 set for stop bit, b2 set for line idle state
+    // hi8 b0 set for stop bit, b1 set for line idle state
     f.hi8 = 0x03;
     bits psave = {PUTXPORT};
 
