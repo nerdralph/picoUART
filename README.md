@@ -9,7 +9,7 @@ picoUART timing is accurate to the cycle (+- 0.5 cycle error);
 this is less than 1% at 8Mhz.
 
 picoUART is a library that is compatible with the Arduino API but is not
- dependent on any Arduino functions so it can be used with avr-libc.  When used with the Arduino IDE, version 1.6.0 or later is required.
+ dependent on any Arduino functions so it can be used with avr-libc, and sample makefiles can be found for the examples.  When used with the Arduino IDE, version 1.6.0 or later is required.
 
 Default Rx is on PB1, and Tx is on PB0.  If set to the same pin in pu_config.h, picoUART is also capable of 1-wire (shared Rx/Tx) operation.
 
