@@ -18,6 +18,6 @@ jobs:
       run: sudo apt install -y gcc-avr avr-libc
 
     - name: make echo
-      run: make
-      working-directory: examples/echo
+      run: cd examples/echo; make
+#      working-directory: examples/echo
 
