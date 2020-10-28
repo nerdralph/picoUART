@@ -18,6 +18,7 @@ jobs:
       run: sudo apt install -y gcc-avr avr-libc build-essential
 
     - name: make echo
+      shell: bash
       run: cd examples/echo; make
 #      working-directory: examples/echo
 
