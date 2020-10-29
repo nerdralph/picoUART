@@ -6,6 +6,7 @@
 
 #include <avr/sleep.h>
 #include <avr/pgmspace.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
 #include <picoUART.h>
 #include <pu_print.h>
