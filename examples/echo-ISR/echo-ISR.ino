@@ -10,6 +10,7 @@ int readline()
 {
     int count = 0;
     char c;
+    c = pu_read(); // waste
     do {
         while ( ! purx_dataready() );   // wait for data
         c = pu_read();
