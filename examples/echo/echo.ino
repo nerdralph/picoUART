@@ -6,9 +6,9 @@ void setup() {}
 void loop()
 {
     uint8_t c;
-    prints("\r\npicoUART echo ");
+    prints_P(PSTR("\r\npicoUART echo "));
     c = purx();
-    prints(" got: ");
+    prints_P(PSTR(" got: "));
     putx(c);
 }
 
