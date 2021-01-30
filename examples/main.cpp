@@ -1,7 +1,6 @@
 void setup();
 void loop();
 
-__attribute((weak))
 int main()
 {
     setup();
