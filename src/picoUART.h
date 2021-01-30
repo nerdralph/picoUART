@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <avr/io.h>
 #include "pu_config.h"
 
 // make these functions work like type-safe macros
