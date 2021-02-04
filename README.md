@@ -18,3 +18,5 @@ picoUART 1.0.0 supports interrupt-driven receive using pin-change interrupts on 
 Examples include a clock tuner program to help determine the best OSCCAL value for error-free communication.
 
 For an even smaller transmit-only asynchronous serial library, see <a href="https://github.com/nerdralph/debugSerial">debugSerial</a>.
+
+For a full-duplex bit-banged AVR UART implementation, see <http://nerdralph.blogspot.com/2020/06/a-full-duplex-tiny-avr-software-uart.html>WGMUART</a>.
