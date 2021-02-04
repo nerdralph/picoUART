@@ -5,3 +5,4 @@
 20200209 version 0.9 - rewrite in mostly C 
 20200507 version 1.0 - support PCINT receive
 20200513 version 1.1 - add ClockTune and pu_print, drop C support
+20210131 version 1.2 - cleanup makefiles
