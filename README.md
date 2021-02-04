@@ -19,4 +19,4 @@ Examples include a clock tuner program to help determine the best OSCCAL value f
 
 For an even smaller transmit-only asynchronous serial library, see <a href="https://github.com/nerdralph/debugSerial">debugSerial</a>.
 
-For a full-duplex bit-banged AVR UART implementation, see <http://nerdralph.blogspot.com/2020/06/a-full-duplex-tiny-avr-software-uart.html>WGMUART</a>.
+For a full-duplex bit-banged AVR UART implementation, see <a href="http://nerdralph.blogspot.com/2020/06/a-full-duplex-tiny-avr-software-uart.html">WGMUART</a>.
